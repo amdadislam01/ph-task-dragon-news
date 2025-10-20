@@ -13,6 +13,7 @@ const Register = () => {
     const password = from.password.value;
     createUser(email, password)
     .then((result) => {
+      e.target.reset();
       const userInfo = result.user;
       // console.log(userInfo);
       setUser(userInfo)

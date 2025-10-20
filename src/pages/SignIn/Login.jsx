@@ -1,9 +1,13 @@
-import React, { use } from "react";
-import { Link } from "react-router";
+import React, { use, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthProvider";
 
 const Login = () => {
   const {loginuser, setUser} = use(AuthContext);
+  const [error, setError] = useState("")
+  const location = useLocation();
+  const navigate = useNavigate();
+  const loginForm = location.state?.from?.pathname || '/';
   const handleLogin = (e) => {
     e.preventDefault();
     const from = e.target;
@@ -11,14 +15,17 @@ const Login = () => {
     const password = from.password.value;
     loginuser(email, password)
     .then((result) => {
+      e.target.reset();
+      navigate(loginForm, {replace: true});
       const userInfo = result.user;
       setUser(userInfo)
     })
     .catch((error)=>{
       const errorCode= error.code;
-      const errorMessage = error.message;
-      alert(errorMessage)
-      console.log(errorCode);
+      // const errorMessage = error.message;
+      // alert(errorMessage)
+      setError(errorCode)
+      // console.log(errorCode);
     })
   };
   return (
